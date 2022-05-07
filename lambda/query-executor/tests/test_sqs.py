@@ -13,7 +13,7 @@ from app.athena import Athena
 from app.sqs import Sqs
 
 
-class QueryExecutorTestCase(unittest.TestCase):
+class SqsTestCase(unittest.TestCase):
     """
 
     """
@@ -30,27 +30,13 @@ class QueryExecutorTestCase(unittest.TestCase):
 
             event = self._get_event()
             response = Athena().start_query('SELECT COUNT(request_verb) AS count, request_verb, client_ip FROM alb_logs2 GROUP BY request_verb, client_ip LIMIT 100')
+
             if response.is_success:
                 self.assertTrue(response.is_success)
             else:
                 self.assertFalse(response.is_success)
                 self.assertTrue(response.is_throttle_error)
             logging.info('response : %s' % pprint.pformat(response.response))
-
-    def test_delete_message(self):
-        with EnvironmentVarGuard() as env:
-            env['SQS_URL'] = 'https://sqs.ap-northeast-2.amazonaws.com/681747700094/athena-query-dev'
-
-            event = self._get_event()
-            response = Sqs().delete_message('AQEBhi1qiQLUwHNgjTwyq7ZhyyQgVBi9I1OToyeUybHtWj3d73qNuoOIP3BOBGO836GMxn8jW6ZKqo+QJ36Hakto5HqvNPgvVk0sE1OaVeuRT5KLRDFSs0e257VvrN9oHLOOT33kGXSNYgoLkgt0HJ5FG0yKRhM5XTeVIIpQWcCKv6bk5NMUEj+piaB0h+srA+FL5AuXsaDAX53foi4tffZ7UTaKsxTN4i5EeRvcaXn+jcqeGGp8on+y1PZEsOMFoylbr08a+IE3eMPg7GNtUAR86/IvbCcjNOgQhhOE8rPX06J/WCxUTnl/wLQfwAzpREHtdnswkee1saDpiUvvR8hBviBvTia/DVGM9+fPzIkCwGtVX1TIkmz7tE/fAdDgEIk6U1oiP7VUEXCkZV+0MaNwfw==')
-            self.assertIsNotNone(response)
-            logging.info('response : %s' % pprint.pformat(response))
-            self.assertEqual(response['ResponseMetadata']['HTTPStatusCode'], 200, 'response : %s' % pprint.pformat(response))
-
-    # def test_handler_without_envvars(self):
-    #     with self.assertRaises(KeyError) as e:
-    #         event = self._get_event()
-    #         response = query_executor.handler(event, None)
 
     def _get_event(self):
         return {

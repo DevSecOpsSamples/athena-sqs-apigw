@@ -21,12 +21,13 @@ def init_log_config():
         return
 
     print('[INFO] Starting log configuration')
-    # logs_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '/tmp/logs'))
-    # if not path.exists(logs_path):
-    #     os.makedirs(logs_path)
+    logs_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '/tmp/logs'))
+    if not path.exists(logs_path):
+        os.makedirs(logs_path)
     logging.basicConfig(
-        # filename=os.path.join(logs_path, 'app-packaging.log'),
-        level=logging.INFO,
+        filename=os.path.join(logs_path, 'app-packaging.log'),
+        # level=logging.INFO,
+        level=logging.DEBUG,
         format='%(asctime)s [%(levelname)s] %(message)s',
         datefmt='%H:%M:%S'
     )

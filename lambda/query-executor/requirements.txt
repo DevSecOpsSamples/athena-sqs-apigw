@@ -1,0 +1,3 @@
+boto3~=1.22.8
+athena-cli==0.1.11
+botocore~=1.25.8
