@@ -5,12 +5,12 @@
 
 There is a limitation of concurrent query according to the Quota:
 
-| Region    | Quota name         | Applied quota value | AWS default quota value | Adjustable |
-|-----------|--------------------|--------------|--------------|--------------|
-| us-east-1 | Active DDL queries | 20  | 20  |  Yes |
-| us-east-1 | Active DML queries | 200 | 200 |  Yes |
-| us-east-1 | DDL query timeout  | 600 | 600 |  Yes |
-| us-east-1 | DML query timeout  | 30  | 30  |  Yes |
+| Region    | Quota name         | AWS default quota value | Adjustable |
+|-----------|--------------------|--------------|--------------|
+| us-east-1 | Active DDL queries | 20  |  Yes |
+| us-east-1 | Active DML queries | 200 |  Yes |
+| us-east-1 | DDL query timeout  | 600 |  Yes |
+| us-east-1 | DML query timeout  | 30  |  Yes |
 
 Throttling error message:
 
