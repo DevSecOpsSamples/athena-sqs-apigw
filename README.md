@@ -47,6 +47,8 @@ cdk deploy
 
 ### Resources
 
+All resources use the {stage} suffix such as athena-query-local, athena-query-dev, and athena-query-stg.
+
 | Service       | Name                        | Description  |
 |---------------|-----------------------------|--------------|
 | API Gateway   | /athena/query API           | RESTFul API to enqueue a Athena query. API endpoint: `https://<random-id>.execute-api.<region>.amazonaws.com/dev//athena/query`        |
@@ -60,7 +62,7 @@ cdk deploy
 
 ### Flow
 
-1. User > API Gateway(/athena/query API) > Lambda (athena-query-receiver ) > SQS (athena-query)
+1. User > API Gateway(/athena/query API) > Lambda (athena-query-receiver) > SQS (athena-query)
 2. Query executor Lamda(athena-query-executor) processing query messages from athena-query SQS
 3. Enqueue an Athena query when a throttling error occurs from athena-query-executor Lambda.
 
@@ -90,9 +92,9 @@ https://docs.aws.amazon.com/ko_kr/athena/latest/ug/query-metrics-viewing.html
 
 | Metric          | Description        |
 |-----------------|--------------------|
-| StartQuery      | start_query_execution function call count from athena-query-executor Lambda |
+| StartQuery      | start_query_execution function call count from `athena-query-executor` Lambda |
 | ThrottlingError | Throttling error count(TooManyRequestsException)    |
-| RestartQuery    | Resart query count by enque to athena-query SQS |
+| RestartQuery    | Restart query count by enque to `athena-query` SQS |
 
 # Setup Glue Schema
 
