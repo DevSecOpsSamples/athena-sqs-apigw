@@ -1,6 +1,23 @@
 
 # Athena concurrent query with API Gateway and SQS
 
+## Background
+
+There is a limitation of concurrent query according to the Quota:
+
+| Region    | Quota name         | Applied quota value | AWS default quota value | Adjustable |
+|-----------|--------------------|--------------|--------------|--------------|
+| us-east-1 | Active DDL queries | 20  | 20  |  Yes |
+| us-east-1 | Active DML queries | 200 | 200 |  Yes |
+| us-east-1 | DDL query timeout  | 600 | 600 |  Yes |
+| us-east-1 | DML query timeout  | 30  | 30  |  Yes |
+
+Throttling error message:
+
+An error occurred (TooManyRequestsException) when calling the StartQueryExecution operation: You have exceeded the limit for the number of queries you can run concurrently. Please reduce the number of concurrent queries submitted by this account. Contact customer support to request a concurrent query limit increase.
+
+This soltion was made to retry Athena query when Throttling error occurred.
+
 ## Prerequisites
 
 ```bash
@@ -20,7 +37,6 @@ Use the `cdk` command-line toolkit to interact with your project:
 * `cdk diff`: compares your app with the deployed stack
 * `cdk watch`: deployment every time a file change is detected
 
-
 ### CDK deploy
 
 ```bash
@@ -30,24 +46,52 @@ cdk deploy
 
 ### Resources
 
-| Service       | Name                        | Description |
+| Service       | Name                        | Description  |
 |---------------|-----------------------------|--------------|
-| API Gateway   | /athena/query API           |              |
-| SQS           | athena-query-dev            |              |
-| SQS           | athena-query-deadletter-dev | Enqueue from athena-query-executor-dev Lambda when throtting error occurs.      |
-| Lambda        | [athena-query-receiver-dev](./lambda/query-receiver/query_receiver.py)   | Enqueue messages to `athena-query-dev` SQS.     |
-| Lambda        | [athena-query-executor-dev](./lambda/query-executor/query_executor.py)   | Event soruce is athena-query-dev Lambda      |
-| Lambda        | athena-deadletter-query-executor-dev | Batch Lambda to handle athena-query-deadletter-dev messages        |
+| API Gateway   | /athena/query API           | RESTFul API to enqueue a Athena query. API endpoint: `https://<random-id>.execute-api.<region>.amazonaws.com/dev//athena/query`        |
+| SQS           | athena-query-dev            | Athena query execution queue             |
+| SQS           | athena-query-deadletter-dev | The dead letter queue of athena-query-dev SQS. Enqueue an Athena query when a throttling error occurs from athena-query-executor-dev Lambda.     |
+| Lambda        | [athena-query-receiver-dev](./lambda/query-receiver/query_receiver.py)   | Receive an Athena query from API gateway and enqueue messages to `athena-query-dev` SQS.     |
+| Lambda        | [athena-query-executor-dev](./lambda/query-executor/query_executor.py)   | Running Athena queries which received fromEvent Soruce(athena-query-dev Lambda).      |
+| Lambda        | [athena-deadletter-query-executor-dev](./lambda/query-executor/deadletter_batch.py) | Batch Lambda to handle athena-query-deadletter-dev messages.        |
+| EventBridge Rule | athena-deadletter-query-executor-dev     | Running the athena-deadletter-query-executor-dev Lambda every miniute. [EventBus Rule](https://ap-northeast-2.console.aws.amazon.com/events/home?region=ap-northeast-2#/eventbus/default/rules/)     |
 | S3 Bucket     | athena-{account-id}-dev     | Athena query output bucket      |
 
-# Flow
+### Flow
 
-1. User > API Gateway(/athena/query API) > athena-query-receiver-dev Lambda > athena-query-dev SQS
-2. athena-query-executor-dev Lamda processing query messages from athena-query-dev SQS
-3 Enqueue to athena-query-deadletter-dev about throtting error Athena quries
-4. Batch Lambda process Athena query from athena-query-deadletter-dev SQS with 1 min interval
+1. User > API Gateway(/athena/query API) > Lambda (athena-query-receiver-dev ) > SQS (athena-query-dev)
+2. Query executor Lamda(athena-query-executor-dev) processing query messages from athena-query-dev SQS
+3. Enqueue to athena-query-deadletter-dev about throttling error Athena quries
+4. Batch Lambda processing Athena quries from dead letter SQS(athena-query-deadletter-dev) with 1 min interval
 
-# Glue Schema
+# CloudWatch Metric
+
+## AWS Metric
+
+Enable `Publish query metrics to AWS CloudWatch`
+Workgroups > primary > Settings > Metrics > Publish query metrics to AWS CloudWatch
+
+https://docs.aws.amazon.com/ko_kr/athena/latest/ug/query-metrics-viewing.html
+
+| Metric          | Description        |
+|-----------------|--------------------|
+| QueryQueueTime      |  |
+| QueryPlanningTime   |  |
+| EngineExecutionTime |  |
+| TotalExecutionTime  |  |
+| ServiceProcessingTime  |  |
+| ProcessedBytes      |  |
+
+## Custom Metric
+
+| Metric          | Description        |
+|-----------------|--------------------|
+| StartQuery      | start_query_execution function call count from athena-query-executor Lambda |
+| ThrottlingError | Throttling error count(TooManyRequestsException)    |
+| RestartQuery    | Resart query count by enque to athena-query-dev SQS |
+
+# Setup Glue Schema
+## Glue Schema
 
 https://docs.aws.amazon.com/ko_kr/athena/latest/ug/application-load-balancer-logs.html
 
@@ -102,27 +146,8 @@ ALB log query:
 
 ```json
 {
-  "userId":"e586fd16-61bc-4f21-b2b9-1b8b69066510",
-  "queryId":"79a9aac3-e82b-4ed9-9fd5-eda242a4ad72",
-  "query":"SELECT COUNT(request_verb) AS count, request_verb, client_ip FROM product_alb_logs GROUP BY request_verb, client_ip;"
+  "userId": "e586fd16-61bc-4f21-b2b9-1b8b69066510",
+  "queryId": "79a9aac3-e82b-4ed9-9fd5-eda242a4ad72",
+  "query": "SELECT COUNT(request_verb) AS count, request_verb, client_ip FROM product_alb_logs GROUP BY request_verb, client_ip;"
 }
 ```
-
-# Athena
-
-Enable `Publish query metrics to AWS CloudWatch`
-Workgroups > primary > Settings > Metrics > Publish query metrics to AWS CloudWatch
-
-## CloudWatch Metric
-
-https://docs.aws.amazon.com/ko_kr/athena/latest/ug/query-metrics-viewing.html
-
-"MetricName": "ProcessedBytes",
-"MetricName": "QueryPlanningTime",
-"MetricName": "EngineExecutionTime",
-"MetricName": "TotalExecutionTime",
-"MetricName": "QueryQueueTime",
-"MetricName": "ServiceProcessingTime",
-
-
-1, 3.5

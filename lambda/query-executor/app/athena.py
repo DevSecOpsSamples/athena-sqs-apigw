@@ -1,16 +1,12 @@
 import json
-import time
 import os
 import boto3
 import logging
-from os import path
 
 import app.athena
 from app.sqs import Sqs
-import log_helper
 
 from botocore.exceptions import ClientError
-# from botocore.errorfactory import TooManyRequestsException
 
 
 class QueryResponse:
@@ -38,9 +34,17 @@ class Athena(object):
         self.cw_client = boto3.client('cloudwatch')
         self.athena_client = boto3.client('athena')
 
-
-    def start_query(self, query):
-        """ batch size of event source is 1 """
+    def start_query(self, json_query):
+        """
+        Send the JSON string message to dead letter SQS when throttling error occurs
+        
+        json_query: '{"userId": "e586fd16-61bc-4f21-b2b9-1b8b69066510", "queryId": "79a9aac3-e82b-4ed9-9fd5-eda242a4ad72", "query": "SELECT COUNT(request_verb) AS count, request_verb, client_ip FROM product_alb_logs GROUP BY request_verb, client_ip"}'}
+        """
+        query = None
+        assert 'query' in json_query
+        query = json_query['query']
+        print('query:' + query)
+        
         output = os.environ['OUTPUT_S3_BUCKET']
         DATABASE = 'default'
 
@@ -58,7 +62,6 @@ class Athena(object):
                     'OutputLocation': output,
                 }
             )
-            print('query:' + query)
             query_response.is_success = True
             query_response.response = response
             query_response.query_execution_id = response['QueryExecutionId']
@@ -71,8 +74,8 @@ class Athena(object):
             if e.response['Error']['Code'] == 'TooManyRequestsException':
                 query_response.is_throttle_error = True
             if self.use_deadletter_queue:
-                print('========= SEND deadletter_message: %s', query)
-                self.sqs.send_deadletter_message(query)
+                print('=== SEND deadletter message: ', json_query)
+                self.sqs.send_deadletter_message(json.dumps(json_query))
                 self._put_fail_metric(DATABASE)
             pass
             return query_response
@@ -82,7 +85,7 @@ class Athena(object):
             Namespace='AthenaQuery',
             MetricData=[
                 {
-                    'MetricName': 'StartQueryExecution',
+                    'MetricName': 'StartQuery',
                     'Dimensions': [
                         {
                             'Name': 'DATABASE',
@@ -108,6 +111,25 @@ class Athena(object):
                         },
                     ],
                     'Value': 1,
+                    'Unit': 'Count'
+                }
+            ]
+        )
+
+    def put_restart_metric(self, database, value):
+        print('Put Namespace:AthenaQuery, MetricName:RestartQuery Value: '+ str(value))
+        self.cw_client.put_metric_data(
+            Namespace='AthenaQuery',
+            MetricData=[
+                {
+                    'MetricName': 'RestartQuery',
+                    'Dimensions': [
+                        {
+                            'Name': 'DATABASE',
+                            'Value': database
+                        },
+                    ],
+                    'Value': value,
                     'Unit': 'Count'
                 }
             ]

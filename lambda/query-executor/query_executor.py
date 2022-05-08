@@ -19,27 +19,34 @@ def handler(event, context):
 
     print('event:' + str(event))
 
-    for record in event['Records']:
-        print('body:' + str(record))
-        postApiBody = json.loads(record['body'])
-        print('postApiBody:' + str(postApiBody))
+    athena = Athena()
+    sqs = Sqs()
 
-        query = postApiBody['query']
+    for record in event['Records']:
+        print('body: ' + str(record))
+        jsonQuery = json.loads(record['body'])
+        print('postApiBody: ' + str(jsonQuery))
+
+        # query = postApiBody['query']
         receiptHandle = record['receiptHandle']
 
-        athena = Athena()
-        sqs = Sqs()
-
         try:
-            athena.start_query(query)
+            athena.start_query(jsonQuery)
             sqs.delete_message(receiptHandle)
+            return {
+                    "statusCode": 200,
+                    "body": json.dumps({
+                        "code ": 'OK',
+                        "message ": 'SUCCESS'
+                    })
+                }
         except ClientError as e:
             logging.error(e)
             print(e)
             return {
                     "statusCode": 500,
                     "body": json.dumps({
-                        "msg ": 'ERROR',
+                        "code ": 'ERROR',
                         "message ": e
                     })
                 }

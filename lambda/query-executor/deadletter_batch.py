@@ -14,32 +14,58 @@ log_helper.init_log_config()
 
 def handler(event, context):
     """ 
-    Lambda is triggered by 'athena-query-dev' queue. batch size of event source is 1 
+    Handle dead letter SQS messages through EventBridge
+    1. Send a message to query queue
+    2. Delete a message from dead letter query queue
+    3. Put the RestartQuery metric
     """
 
     print('event:' + str(event))
+    count = 0
 
-    for record in event['Records']:
-        print('body:' + str(record))
-        postApiBody = json.loads(record['body'])
-        print('postApiBody:' + str(postApiBody))
-
-        query = postApiBody['query']
-        receiptHandle = record['receiptHandle']
-
-        athena = Athena()
+    try:
         sqs = Sqs()
+        athena = Athena()
+        messages = sqs.receive_deadletter_message()
+        logging.info('messages : %s' % messages)
 
-        try:
-            athena.start_query(query)
-            sqs.delete_message(receiptHandle)
-        except ClientError as e:
-            logging.error(e)
-            print(e)
-            return {
-                    "statusCode": 500,
-                    "body": json.dumps({
-                        "msg ": 'ERROR',
-                        "message ": e
-                    })
+        while 'Messages' in messages:
+            if count > 1000:
+                return
+            for record in messages['Messages']:
+                count = count + 1
+                json_query = record['Body']
+                print('message num:' + str(count) + ', json_query: ' + json_query)
+                
+                sqs.send_message(json_query)
+
+                receipt_handle = record['ReceiptHandle']
+                print('Delete receipt_handle:' + receipt_handle)
+                sqs.delete_deadletter_message(receipt_handle)
+
+            messages = sqs.receive_deadletter_message()
+        else:
+            print('message is empty!')
+        return {
+                "statusCode": 200,
+                "body": {
+                    "code ": 'OK',
+                    "message ": 'SUCCESS'
                 }
+            }
+    except ClientError as e:
+        logging.error(e)
+        print(e)
+        return {
+                "statusCode": 500,
+                "body": json.dumps({
+                    "code ": 'ERROR',
+                    "message ": e
+                })
+            }
+    finally:
+        athena.put_restart_metric('default', count)
+
+
+if __name__ == "__main__":
+    handler(None, None)

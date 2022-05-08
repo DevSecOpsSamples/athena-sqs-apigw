@@ -26,8 +26,8 @@ def init_log_config():
         os.makedirs(logs_path)
     logging.basicConfig(
         filename=os.path.join(logs_path, 'app-packaging.log'),
-        # level=logging.INFO,
-        level=logging.DEBUG,
+        level=logging.INFO,
+        # level=logging.DEBUG,
         format='%(asctime)s [%(levelname)s] %(message)s',
         datefmt='%H:%M:%S'
     )
