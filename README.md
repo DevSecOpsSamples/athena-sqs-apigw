@@ -1,6 +1,7 @@
 
-# Athena concurrent query with API Gateway and SQS
+# Retry Athena query with SQS and API Gateway
 
+This solution was made to retry Athena query without requested data loss when Throttling error occurred.
 ## Background
 
 There is a limitation of concurrent query according to the Quota:
@@ -14,9 +15,9 @@ There is a limitation of concurrent query according to the Quota:
 
 Throttling error message:
 
+```bash
 An error occurred (TooManyRequestsException) when calling the StartQueryExecution operation: You have exceeded the limit for the number of queries you can run concurrently. Please reduce the number of concurrent queries submitted by this account. Contact customer support to request a concurrent query limit increase.
-
-This solution was made to retry Athena query when Throttling error occurred.
+```
 
 ## Prerequisites
 
