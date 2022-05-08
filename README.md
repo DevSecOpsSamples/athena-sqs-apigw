@@ -50,20 +50,23 @@ cdk deploy
 | Service       | Name                        | Description  |
 |---------------|-----------------------------|--------------|
 | API Gateway   | /athena/query API           | RESTFul API to enqueue a Athena query. API endpoint: `https://<random-id>.execute-api.<region>.amazonaws.com/dev//athena/query`        |
-| SQS           | athena-query-dev            | Athena query execution queue             |
-| SQS           | athena-query-deadletter-dev | The dead letter queue of athena-query-dev SQS. Enqueue an Athena query when a throttling error occurs from athena-query-executor-dev Lambda.     |
-| Lambda        | [athena-query-receiver-dev](./lambda/query-receiver/query_receiver.py)   | Receive an Athena query from API gateway and enqueue messages to `athena-query-dev` SQS.     |
-| Lambda        | [athena-query-executor-dev](./lambda/query-executor/query_executor.py)   | Running Athena queries which received fromEvent Soruce(athena-query-dev Lambda).      |
-| Lambda        | [athena-deadletter-query-executor-dev](./lambda/query-executor/deadletter_batch.py) | Batch Lambda to handle athena-query-deadletter-dev messages.        |
-| EventBridge Rule | athena-deadletter-query-executor-dev     | Running the athena-deadletter-query-executor-dev Lambda every miniute. [EventBus Rule](https://ap-northeast-2.console.aws.amazon.com/events/home?region=ap-northeast-2#/eventbus/default/rules/)     |
-| S3 Bucket     | athena-{account-id}-dev     | Athena query output bucket      |
+| SQS           | athena-query            | Athena query execution queue             |
+| SQS           | athena-query-deadletter | The dead letter queue of athena-query SQS. Enqueue an Athena query when a throttling error occurs from athena-query-executor Lambda.     |
+| Lambda        | [athena-query-receiver](./lambda/query-receiver/query_receiver.py)   | Receive an Athena query from API gateway and enqueue messages to `athena-query` SQS.     |
+| Lambda        | [athena-query-executor](./lambda/query-executor/query_executor.py)   | Running Athena queries which received fromEvent Soruce(athena-query Lambda).      |
+| Lambda        | [athena-deadletter-query-executor](./lambda/query-executor/deadletter_batch.py) | Batch Lambda to handle athena-query-deadletter messages.        |
+| EventBridge Rule | athena-deadletter-query-executor     | Running the athena-deadletter-query-executor Lambda every miniute. [EventBus Rule](https://ap-northeast-2.console.aws.amazon.com/events/home?region=ap-northeast-2#/eventbus/default/rules/)     |
+| S3 Bucket     | athena-{account-id}     | Athena query output bucket      |
 
 ### Flow
 
-1. User > API Gateway(/athena/query API) > Lambda (athena-query-receiver-dev ) > SQS (athena-query-dev)
-2. Query executor Lamda(athena-query-executor-dev) processing query messages from athena-query-dev SQS
-3. Enqueue to athena-query-deadletter-dev about throttling error Athena quries
-4. Batch Lambda processing Athena quries from dead letter SQS(athena-query-deadletter-dev) with 1 min interval
+1. User > API Gateway(/athena/query API) > Lambda (athena-query-receiver ) > SQS (athena-query)
+2. Query executor Lamda(athena-query-executor) processing query messages from athena-query SQS
+3. Enqueue an Athena query when a throttling error occurs from athena-query-executor Lambda.
+
+   SQS (athena-query) > Lambda (athena-query-executor) > SQS (athena-query-deadletter)
+
+4. Batch Lambda(athena-deadletter-query-executor) processing Athena quries from dead letter SQS(athena-query-deadletter) with 1 min interval
 
 # CloudWatch Metric
 
@@ -89,10 +92,9 @@ https://docs.aws.amazon.com/ko_kr/athena/latest/ug/query-metrics-viewing.html
 |-----------------|--------------------|
 | StartQuery      | start_query_execution function call count from athena-query-executor Lambda |
 | ThrottlingError | Throttling error count(TooManyRequestsException)    |
-| RestartQuery    | Resart query count by enque to athena-query-dev SQS |
+| RestartQuery    | Resart query count by enque to athena-query SQS |
 
 # Setup Glue Schema
-## Glue Schema
 
 https://docs.aws.amazon.com/ko_kr/athena/latest/ug/application-load-balancer-logs.html
 
@@ -143,7 +145,12 @@ CREATE EXTERNAL TABLE IF NOT EXISTS alb_logs (
 
 Update `LOCATION 's3://your-alb-logs-directory/AWSLogs/<ACCOUNT-ID>/elasticloadbalancing/<REGION>/';` for your bucket name and region.
 
-ALB log query:
+
+## Testing
+
+Replace API endpoint of athena-apigw-template.jmx
+
+body:
 
 ```json
 {
