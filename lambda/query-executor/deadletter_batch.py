@@ -55,17 +55,17 @@ def handler(event, context):
             }
     except ClientError as e:
         logging.error(e)
-        print(e)
+        print('ERROR: ' + str(e))
         return {
                 "statusCode": 500,
-                "body": json.dumps({
+                "body": {
                     "code ": 'ERROR',
-                    "message ": e
-                })
+                    "message ": str(e)
+                }
             }
     finally:
         athena.put_restart_metric('default', count)
 
 
-if __name__ == "__main__":
-    handler(None, None)
+# if __name__ == "__main__":
+#     handler(None, None)

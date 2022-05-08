@@ -25,7 +25,7 @@ def init_log_config():
     if not path.exists(logs_path):
         os.makedirs(logs_path)
     logging.basicConfig(
-        filename=os.path.join(logs_path, 'app-packaging.log'),
+        filename=os.path.join(logs_path, 'athena-sqs.log'),
         level=logging.INFO,
         # level=logging.DEBUG,
         format='%(asctime)s [%(levelname)s] %(message)s',
