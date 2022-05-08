@@ -16,7 +16,7 @@ Throttling error message:
 
 An error occurred (TooManyRequestsException) when calling the StartQueryExecution operation: You have exceeded the limit for the number of queries you can run concurrently. Please reduce the number of concurrent queries submitted by this account. Contact customer support to request a concurrent query limit increase.
 
-This soltion was made to retry Athena query when Throttling error occurred.
+This solution was made to retry Athena query when Throttling error occurred.
 
 ## Prerequisites
 
