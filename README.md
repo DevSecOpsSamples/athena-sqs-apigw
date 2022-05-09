@@ -61,7 +61,7 @@ cdk deploy
 | Lambda        | [athena-query-receiver](./lambda/query-receiver/query_receiver.py)   | API Gateway에서 Athena 쿼리를 수신하고 'athena-query' SQS에 메시지를 대기열에 넣습니다.     |
 | Lambda        | [athena-query-executor](./lambda/query-executor/query_executor.py)   | 이벤트 소스(athena-query Lambda)에서 수신한 Athena 쿼리를 실행합니다.     |
 | Lambda        | [athena-deadletter-query-executor](./lambda/query-executor/deadletter_batch.py) | athena-query-deadletter 메시지를 처리하는 배치 Lambda 입니다.        |
-| EventBridge Rule | athena-deadletter-query-executor     | 매분마다 athena-dead letter-query-execute Lambda를 실행합니다. [EventBus Rule](https://ap-northeast-2.console.aws.amazon.com/events/home?region=ap-northeast-2#/eventbus/default/rules/)     |
+| EventBridge Rule | athena-deadletter-query-executor     | 매분마다 athena-dead letter-query-execute Lambda를 실행합니다. [EventBus Rule menu](https://ap-northeast-2.console.aws.amazon.com/events/home?region=ap-northeast-2#/eventbus/default/rules/)     |
 | S3 Bucket     | athena-{account-id}     | Athena query output bucket      |
 
 * [lambda/query-executor/app/athena.py](./lambda/query-executor/app/athena.py)
@@ -89,20 +89,22 @@ https://docs.aws.amazon.com/ko_kr/athena/latest/ug/query-metrics-viewing.html
 
 | Metric                | Description        |
 |-----------------------|--------------------|
-| QueryQueueTime        | The number of milliseconds that the query was in the query queue waiting for resources.  |
-| QueryPlanningTime     | The number of milliseconds that Athena took to plan the query processing flow.           |
-| EngineExecutionTime   | The number of milliseconds that the query took to run. |
-| TotalExecutionTime    | The number of milliseconds that Athena took to run a DDL or DML query. TotalExecutionTime includes QueryQueueTime, QueryPlanningTime, EngineExecutionTime, and ServiceProcessingTime. |
-| ServiceProcessingTime | Number of milliseconds that Athena took to process the query results after the query engine finished running the query. |
-| ProcessedBytes        | The number of bytes that Athena scanned per DML query. |
+| TotalExecutionTime    | Athena가 DDL 또는 DML 쿼리를 실행하는 데 걸린 시간(밀리초)입니다. TotalExecutionTime에는 QueryQueueTime, QueryPlanningTime, EngineExecutionTime 및 ServiceProcessingTime이 포함됩니다. |
+| QueryQueueTime        | 쿼리가 리소스를 기다리면서 쿼리 대기열에 있던 시간(밀리초) 입니다.  |
+| QueryPlanningTime     | Athena가 쿼리 처리 흐름을 계획하는 데 걸린 시간(밀리초)입니다.          |
+| EngineExecutionTime   | 쿼리를 실행하는 데 걸린 시간(밀리초)입니다. |
+| ServiceProcessingTime | 쿼리 엔진이 쿼리 실행을 완료한 후 Athena가 쿼리 결과를 처리하는 데 걸린 시간(밀리초)입니다. |
+| ProcessedBytes        | DML 쿼리당 Athena가 스캔한 바이트 수입니다 |
 
 ## Custom Metric
 
 AWS에서 제공하는 Athena metric은 쿼리 실행 횟수와 에러 횟수에 대한 metric을 제공하지 않으며 SQS에서 athena query를 시작 또는 재시작시 custom metric을 저장합니다.
 
+`athena-query` > `athena-query-deadletter` 또는 `athena-query-deadletter` > `athena-query` 로 message 이동시 Custom Metric을 생성하기 위해 SQS의 dead letter 대기열 기능이 아닌 code로 처리합니다.
+
 | Metric               | Description        |
 |----------------------|--------------------|
-| StartQueryCount      | `athena-query-executor` Lambda에서 start_query_execution 함수가 호출된 횟수입니다. |
+| StartQueryCount      | `athena-query-executor` Lambda에서 start_query_execution 함수가 호출된 횟수입니다. [boto3 start_query_execution](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena.html#Athena.Client.start_query_execution) |
 | ThrottlingErrorCount | `athena-query-executor` Lambda에서 쓰로틀링 에러(TooManyRequestsException)가 발생한 횟수입니다.   |
 | RestartQueryCount    | `athena-query` SQS에서 `athena-query-deadletter` SQS로 대기열에 추가된 쿼리를 다시 시작한 횟수입니다.   |
 
