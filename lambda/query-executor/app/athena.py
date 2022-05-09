@@ -85,7 +85,7 @@ class Athena(object):
             Namespace='AthenaQuery',
             MetricData=[
                 {
-                    'MetricName': 'StartQuery',
+                    'MetricName': 'StartQueryCount',
                     'Dimensions': [
                         {
                             'Name': 'DATABASE',
@@ -103,7 +103,7 @@ class Athena(object):
             Namespace='AthenaQuery',
             MetricData=[
                 {
-                    'MetricName': 'ThrottlingError',
+                    'MetricName': 'ThrottlingErrorCount',
                     'Dimensions': [
                         {
                             'Name': 'DATABASE',
@@ -122,7 +122,7 @@ class Athena(object):
             Namespace='AthenaQuery',
             MetricData=[
                 {
-                    'MetricName': 'RestartQuery',
+                    'MetricName': 'RestartQueryCount',
                     'Dimensions': [
                         {
                             'Name': 'DATABASE',

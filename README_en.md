@@ -1,9 +1,11 @@
 
 # Retry Athena query with SQS and API Gateway
 
-Athena 쿼리 동시 실행 Quota에 의해 쓰로틀링 에러가 발생할 수 있으며 SQS, dead letter SQS를 사용해 쓰틀링 에러 발생시 재실행 합니다.
+This solution was made to retry Athena query without requested data loss when Throttling error occurred.
 
 ![cloudwatch-metric](./screenshots/cloudwatch-metric.png?raw=true)
+
+
 ## Background
 
 There is a limitation of concurrent query according to the Quota:
@@ -47,28 +49,28 @@ cdk deploy
 
 ### Resources
 
-모든 리소스는 athena-query-local, athena-query-dev 및 athena-query-stg와 같이 {stage} 접미사를 사용합니다.
+All resources use the {stage} suffix such as athena-query-local, athena-query-dev, and athena-query-stg.
 
 | Service       | Name                        | Description  |
 |---------------|-----------------------------|--------------|
-| API Gateway   | /athena/query API           | Athena 쿼리를 queue에 추가하는 RESTFul API. API endpoint: `https://<random-id>.execute-api.<region>.amazonaws.com/dev//athena/query`        |
-| SQS           | athena-query            | Athena 쿼리 실행 queue 입니다.            |
-| SQS           | athena-query-deadletter | Athena query SQS의 처리하지 못한 queue입니다. athena-query-executor Lambda에서 조절 오류가 발생하면 Athena 쿼리를 대기열에 넣습니다.     |
-| Lambda        | [athena-query-receiver](./lambda/query-receiver/query_receiver.py)   | API Gateway에서 Athena 쿼리를 수신하고 'athena-query' SQS에 메시지를 대기열에 넣습니다.     |
-| Lambda        | [athena-query-executor](./lambda/query-executor/query_executor.py)   | 이벤트 소스(athena-query Lambda)에서 수신한 Athena 쿼리를 실행합니다.     |
-| Lambda        | [athena-deadletter-query-executor](./lambda/query-executor/deadletter_batch.py) | athena-query-deadletter 메시지를 처리하는 배치 Lambda 입니다.        |
-| EventBridge Rule | athena-deadletter-query-executor     | 매분마다 athena-dead letter-query-execute Lambda를 실행합니다. [EventBus Rule](https://ap-northeast-2.console.aws.amazon.com/events/home?region=ap-northeast-2#/eventbus/default/rules/)     |
+| API Gateway   | /athena/query API           | RESTFul API to enqueue a Athena query. API endpoint: `https://<random-id>.execute-api.<region>.amazonaws.com/dev//athena/query`        |
+| SQS           | athena-query            | Athena query execution queue             |
+| SQS           | athena-query-deadletter | The dead letter queue of athena-query SQS. Enqueue an Athena query when a throttling error occurs from athena-query-executor Lambda.     |
+| Lambda        | [athena-query-receiver](./lambda/query-receiver/query_receiver.py)   | Receive an Athena query from API gateway and enqueue messages to `athena-query` SQS.     |
+| Lambda        | [athena-query-executor](./lambda/query-executor/query_executor.py)   | Running Athena queries which received fromEvent Soruce(athena-query Lambda).      |
+| Lambda        | [athena-deadletter-query-executor](./lambda/query-executor/deadletter_batch.py) | Batch Lambda to handle athena-query-deadletter messages.        |
+| EventBridge Rule | athena-deadletter-query-executor     | Running the athena-deadletter-query-executor Lambda every miniute. [EventBus Rule](https://ap-northeast-2.console.aws.amazon.com/events/home?region=ap-northeast-2#/eventbus/default/rules/)     |
 | S3 Bucket     | athena-{account-id}     | Athena query output bucket      |
 
 ### Flow
 
 1. User > API Gateway(/athena/query API) > Lambda (athena-query-receiver) > SQS (athena-query)
-2. Query executor Lamda(athena-query-executor)는 athena-query SQS에서 쿼리 메시지를 처리합니다.
-3. athena-query-executor Lambda에서 throttling 오류가 발생할 때 Athena 쿼리를 대기열에 넣습니다.
+2. Query executor Lamda(athena-query-executor) processing query messages from athena-query SQS
+3. Enqueue an Athena query when a throttling error occurs from athena-query-executor Lambda.
 
    SQS (athena-query) > Lambda (athena-query-executor) > SQS (athena-query-deadletter)
 
-4. dead leatter SQS(athena-query-deadletter)에서 Athena 쿼리를 일괄 처리하는 Lambda(athena-dead letter-query-executor) 를 EventBridge Rule을 통해 1분 간격으로 실행합니다.
+4. Batch Lambda(athena-deadletter-query-executor) processing Athena quries from dead letter SQS(athena-query-deadletter) with 1 min interval
 
 # CloudWatch Metric
 
@@ -91,9 +93,9 @@ https://docs.aws.amazon.com/ko_kr/athena/latest/ug/query-metrics-viewing.html
 
 | Metric               | Description        |
 |----------------------|--------------------|
-| StartQueryCount      | `athena-query-executor` Lambda에서 start_query_execution 함수가 호출된 횟수입니다. |
-| ThrottlingErrorCount | `athena-query-executor` Lambda에서 조절 오류(TooManyRequestsException)가 발생한 횟수입니다.   |
-| RestartQueryCount    | `athena-query` SQS에서 `athena-query-deadletter` SQS로 대기열에 추가된 쿼리를 다시 시작한 횟수입니다.   |
+| StartQueryCount      | The number of count that start_query_execution function is called from `athena-query-executor` Lambda. |
+| ThrottlingErrorCount | The number of count that throttling error(TooManyRequestsException) occured from `athena-query-executor` Lambda.   |
+| RestartQueryCount    | The number of count that restarted query being enqueud from `athena-query` SQS to `athena-query-deadletter` SQS.   |
 
 # Creating the table for ALB logs
 

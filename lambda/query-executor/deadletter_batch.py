@@ -14,7 +14,7 @@ log_helper.init_log_config()
 
 def handler(event, context):
     """ 
-    Handle dead letter SQS messages through EventBridge
+    Handle dead letter SQS messages through EventBridge every minute.
     1. Send a message to query queue
     2. Delete a message from dead letter query queue
     3. Put the RestartQuery metric
