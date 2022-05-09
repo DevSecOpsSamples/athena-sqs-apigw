@@ -114,6 +114,8 @@ cdk deploy
 
    SQS (athena-query-deadletter) > Lambda (athena-deadletter-query-executor) > SQS (athena-query)로 enqueue
 
+![xray](./screenshots/xray.png?raw=true)
+
 ## CloudWatch Metric
 
 ### AWS Metric
