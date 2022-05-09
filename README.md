@@ -53,6 +53,8 @@ Use the `cdk` command-line toolkit to interact with your project:
 cdk deploy
 ```
 
+[lib/athena-sqs-apigw.ts](./lib/athena-sqs-apigw.ts)
+
 ### Resources
 
 모든 리소스는 athena-query-local, athena-query-dev 및 athena-query-stg와 같이 {stage} 접미사를 사용합니다.
