@@ -4,4 +4,9 @@ import { ApigwAthenaSqsStack } from '../lib/athena-sqs-apigw';
 
 const app = new cdk.App();
 const env = app.node.tryGetContext('env') || 'dev';
-new ApigwAthenaSqsStack(app, 'AthenaSqsApigw-' + env);
+new ApigwAthenaSqsStack(app, 'AthenaSqsApigw-' + env, {
+    tags: {
+        environment: env,
+        stack: 'athena-sqs-apigw'
+      }
+});
