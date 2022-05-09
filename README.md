@@ -141,9 +141,11 @@ AWS에서 제공하는 Athena metric은 쿼리 실행 횟수와 에러 횟수에
 |----------------------|--------------------|
 | StartQueryCount      | `athena-query-executor` Lambda에서 start_query_execution 함수가 호출된 횟수입니다. [boto3 start_query_execution](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/athena.html#Athena.Client.start_query_execution) |
 | ThrottlingErrorCount | `athena-query-executor` Lambda에서 쓰로틀링 에러(TooManyRequestsException)가 발생한 횟수입니다.   |
-| RestartQueryCount    | `athena-query` SQS에서 `athena-query-deadletter` SQS로 대기열에 추가된 쿼리를 다시 시작한 횟수입니다.   |
+| RestartQueryCount    | `athena-query` SQS 대기열에서 `athena-query-deadletter` 로 추가되어 쿼리를 다시 시작한 횟수입니다.   |
 
-# Creating the table for ALB logs
+## Testing
+
+### Creating the table for ALB logs
 
 https://docs.aws.amazon.com/ko_kr/athena/latest/ug/application-load-balancer-logs.html
 
@@ -194,7 +196,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS alb_logs (
 
 Update `LOCATION 's3://your-alb-logs-directory/AWSLogs/<ACCOUNT-ID>/elasticloadbalancing/<REGION>/';` for your bucket name and region.
 
-## Testing
+### JMeter
 
 아래 명령어로 athena-sqs-apigw-template.jmx JMeter 파일의 API endpoint가 반영된 파일을 생성합니다.
 
