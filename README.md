@@ -15,9 +15,13 @@ DML 또는 DDL 쿼리 할당량은 실행 중인 쿼리와 대기 중인 쿼리�
 | Region    | Quota name         | AWS default quota value | Adjustable |
 |-----------|--------------------|--------------|--------------|
 | us-east-1 | Active DDL queries | 20  |  Yes |
-| us-east-1 | Active DML queries | 200 |  Yes |
+| us-east-1 | Active DML queries | **200** |  Yes |
 | us-east-1 | DDL query timeout  | 600 |  Yes |
 | us-east-1 | DML query timeout  | 30  |  Yes |
+| ap-northeast-2 | Active DDL queries | 20  |  Yes |
+| ap-northeast-2 | Active DML queries | **100** |  Yes |
+| ap-northeast-2 | DDL query timeout  | 600 |  Yes |
+| ap-northeast-2 | DML query timeout  | 30  |  Yes |
 
 Throttling error message:
 

@@ -10,9 +10,13 @@ This solution was made to retry Athena query with SQS, dead letter SQS, and API 
 | Region    | Quota name         | AWS default quota value | Adjustable |
 |-----------|--------------------|--------------|--------------|
 | us-east-1 | Active DDL queries | 20  |  Yes |
-| us-east-1 | Active DML queries | 200 |  Yes |
+| us-east-1 | Active DML queries | **200** |  Yes |
 | us-east-1 | DDL query timeout  | 600 |  Yes |
 | us-east-1 | DML query timeout  | 30  |  Yes |
+| ap-northeast-2 | Active DDL queries | 20  |  Yes |
+| ap-northeast-2 | Active DML queries | **100** |  Yes |
+| ap-northeast-2 | DDL query timeout  | 600 |  Yes |
+| ap-northeast-2 | DML query timeout  | 30  |  Yes |
 
 Throttling error message:
 
