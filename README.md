@@ -114,9 +114,9 @@ cdk deploy
 
    SQS (athena-query-deadletter) > Lambda (athena-deadletter-query-executor) > SQS (athena-query)로 enqueue
 
-# CloudWatch Metric
+## CloudWatch Metric
 
-## AWS Metric
+### AWS Metric
 
 Enable `Publish query metrics to AWS CloudWatch` on Workgroups > primary > Settings > Metrics menu.
 
@@ -131,7 +131,7 @@ https://docs.aws.amazon.com/ko_kr/athena/latest/ug/query-metrics-viewing.html
 | ServiceProcessingTime | 쿼리 엔진이 쿼리 실행을 완료한 후 Athena가 쿼리 결과를 처리하는 데 걸린 시간(밀리초)입니다. |
 | ProcessedBytes        | DML 쿼리당 Athena가 스캔한 바이트 수입니다 |
 
-## Custom Metric
+### Custom Metric
 
 AWS에서 제공하는 Athena metric은 쿼리 실행 횟수와 에러 횟수에 대한 metric을 제공하지 않으므로 SQS 메시지 대기열의 Athena query를 시작 또는 재시작시 custom metric을 저장합니다.
 
