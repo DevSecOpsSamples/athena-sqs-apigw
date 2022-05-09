@@ -98,6 +98,8 @@ https://docs.aws.amazon.com/ko_kr/athena/latest/ug/query-metrics-viewing.html
 
 ## Custom Metric
 
+AWS에서 제공하는 Athena metric은 쿼리 실행 횟수와 에러 횟수에 대한 metric을 제공하지 않으며 SQS에서 athena query를 시작 또는 재시작시 custom metric을 저장합니다.
+
 | Metric               | Description        |
 |----------------------|--------------------|
 | StartQueryCount      | `athena-query-executor` Lambda에서 start_query_execution 함수가 호출된 횟수입니다. |
