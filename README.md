@@ -64,6 +64,8 @@ cdk deploy
 | EventBridge Rule | athena-deadletter-query-executor     | 매분마다 athena-dead letter-query-execute Lambda를 실행합니다. [EventBus Rule](https://ap-northeast-2.console.aws.amazon.com/events/home?region=ap-northeast-2#/eventbus/default/rules/)     |
 | S3 Bucket     | athena-{account-id}     | Athena query output bucket      |
 
+* [lambda/query-receiver/app/athena.py](./lambda/query-receiver/app/athena.py)
+* [lambda/query-receiver/app/sqs.py](./lambda/query-receiver/app/sqs.py)
 ### Flow
 
 1. User > API Gateway(/athena/query API) > Lambda (athena-query-receiver) > SQS (athena-query)
