@@ -66,6 +66,7 @@ cdk deploy
 
 * [lambda/query-receiver/app/athena.py](./lambda/query-receiver/app/athena.py)
 * [lambda/query-receiver/app/sqs.py](./lambda/query-receiver/app/sqs.py)
+
 ### Flow
 
 1. User > API Gateway(/athena/query API) > Lambda (athena-query-receiver) > SQS (athena-query)
