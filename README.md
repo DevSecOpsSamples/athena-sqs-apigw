@@ -163,7 +163,7 @@ Update `LOCATION 's3://your-alb-logs-directory/AWSLogs/<ACCOUNT-ID>/elasticloadb
 
 Update the API endpoint of athena-sqs-apigw-template.jmx.
 
-```json
+```bash
 sed -e "s|<random-id>.execute-api.ap-northeast-2.amazonaws.com|yourEndpoint|g"  > athena-sqs-apigw.jmx
 jmeter.sh -t athena-sqs-apigw.jmx
 ```
