@@ -59,6 +59,9 @@ All resources use the {stage} suffix such as athena-query-local, athena-query-de
 | EventBridge Rule | athena-deadletter-query-executor     | Running the athena-deadletter-query-executor Lambda every miniute. [EventBus Rule](https://ap-northeast-2.console.aws.amazon.com/events/home?region=ap-northeast-2#/eventbus/default/rules/)     |
 | S3 Bucket     | athena-{account-id}     | Athena query output bucket      |
 
+* [lambda/query-receiver/app/athena.py](./lambda/query-receiver/app/athena.py)
+* [lambda/query-receiver/app/sqs.py](./lambda/query-receiver/app/sqs.py)
+
 ### Flow
 
 1. User > API Gateway(/athena/query API) > Lambda (athena-query-receiver) > SQS (athena-query)
