@@ -72,7 +72,9 @@ cdk deploy
 
    SQS (athena-query) > Lambda (athena-query-executor) > SQS (athena-query-deadletter)
 
-4. dead leatter SQS(athena-query-deadletter)에서 Athena 쿼리를 일괄 처리하는 Lambda(athena-dead letter-query-executor) 를 EventBridge Rule을 통해 1분 간격으로 실행합니다.
+4. dead leatter SQS(athena-query-deadletter)에서 Athena 쿼리를 일괄 처리하는 Lambda(athena-deadletter-query-executor) 를 EventBridge Rule을 통해 1분 간격으로 실행합니다.
+
+   SQS (athena-query-deadletter) > Lambda (athena-deadletter-query-executor) > SQS (athena-query)로 enqueue
 
 # CloudWatch Metric
 
