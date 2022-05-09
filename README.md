@@ -61,7 +61,7 @@ cdk deploy
 
 | Service       | Name                        | Description  |
 |---------------|-----------------------------|--------------|
-| API Gateway   | /athena/query API           | Athena 쿼리를 queue에 추가하는 RESTFul API. API endpoint: `https://<random-id>.execute-api.<region>.amazonaws.com/dev//athena/query`        |
+| API Gateway   | /athena/query POST API           | Athena 쿼리를 queue에 추가하는 RESTFul API. API endpoint: `https://<random-id>.execute-api.<region>.amazonaws.com/dev//athena/query`        |
 | SQS           | athena-query            | Athena 쿼리 실행 queue 입니다.            |
 | SQS           | athena-query-deadletter | Athena query SQS의 처리하지 못한 queue입니다. athena-query-executor Lambda에서 조절 오류가 발생하면 Athena 쿼리를 대기열에 넣습니다.     |
 | Lambda        | [athena-query-receiver](./lambda/query-receiver/query_receiver.py)   | API Gateway에서 Athena 쿼리를 수신하고 'athena-query' SQS에 메시지를 대기열에 넣습니다.     |
@@ -174,7 +174,7 @@ sed -e "s|<random-id>.execute-api.ap-northeast-2.amazonaws.com|yourEndpoint|g"  
 jmeter.sh -t athena-sqs-apigw.jmx
 ```
 
-/dev/athena/query API payload:
+/dev/athena/query POST API payload:
 
 ```json
 {
