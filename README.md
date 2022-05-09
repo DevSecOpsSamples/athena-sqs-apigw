@@ -25,9 +25,7 @@ DML 또는 DDL 쿼리 할당량은 실행 중인 쿼리와 대기 중인 쿼리�
 
 Throttling error message:
 
-```bash
 An error occurred (TooManyRequestsException) when calling the StartQueryExecution operation: You have exceeded the limit for the number of queries you can run concurrently. Please reduce the number of concurrent queries submitted by this account. Contact customer support to request a concurrent query limit increase.
-```
 
 ## Structure
 
