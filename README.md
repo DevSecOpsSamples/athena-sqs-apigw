@@ -1,7 +1,7 @@
 
 # Retry Athena query with SQS and API Gateway
 
-Athena 쿼리 동시 실행 Quota에 의해 쓰로틀링 에러가 발생할 수 있습니다. API Gateway를 통해 쿼리 실행을 SQS에 저장해서 Lambda로 실행하고 쓰로틀링에러 발생시 dead letter SQS에 저장하고 재실행 합니다.
+Athena 쿼리 동시 실행 Quota에 의해 쓰로틀링 에러가 발생할 수 있습니다. API Gateway를 통해 쿼리 실행을 SQS에 저장해서 Lambda로 실행하고 쓰로틀링 에러 발생시 dead letter SQS에 저장하고 EventBridge를 통해 1분 단위로 재실행 합니다.
 
 Service Quotas https://docs.aws.amazon.com/ko_kr/athena/latest/ug/service-limits.html:
 
@@ -174,6 +174,6 @@ jmeter.sh -t athena-sqs-apigw.jmx
 {
   "userId": "e586fd16-61bc-4f21-b2b9-1b8b69066510",
   "queryId": "79a9aac3-e82b-4ed9-9fd5-eda242a4ad72",
-  "query": "SELECT COUNT(request_verb) AS count, request_verb, client_ip FROM product_alb_logs GROUP BY request_verb, client_ip;"
+  "query": "SELECT COUNT(request_verb) AS count, request_verb, client_ip FROM alb_logs GROUP BY request_verb, client_ip;"
 }
 ```
