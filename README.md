@@ -167,7 +167,7 @@ Update `LOCATION 's3://your-alb-logs-directory/AWSLogs/<ACCOUNT-ID>/elasticloadb
 
 ## Testing
 
-Update the API endpoint of athena-sqs-apigw-template.jmx.
+아래 명령어로 athena-sqs-apigw-template.jmx JMeter 파일의 API endpoint가 반영된 파일을 생성합니다.
 
 ```bash
 sed -e "s|<random-id>.execute-api.ap-northeast-2.amazonaws.com|yourEndpoint|g"  > athena-sqs-apigw.jmx
