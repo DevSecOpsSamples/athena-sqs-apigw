@@ -2,8 +2,16 @@ import json
 import os
 import boto3
 import logging
+import time
+
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.core import patch_all
 
 from botocore.exceptions import ClientError
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+patch_all()
 
 #
 # https://github.com/awsdocs/aws-lambda-developer-guide/blob/main/sample-apps/blank-python/function/lambda_function.py
@@ -20,6 +28,8 @@ def handler(event, context):
 
         sqs_client = boto3.client('sqs')
         res = sqs_client.send_message(QueueUrl=sqsUrl, MessageBody=body)
+
+        time.sleep(1)
 
         return {
                 "statusCode": 200,

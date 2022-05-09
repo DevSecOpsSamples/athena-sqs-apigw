@@ -3,9 +3,12 @@ import { Construct } from 'constructs';
 
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+// import { PythonFunction } from 'aws-cdk-lib/aws-lambda';
+
 import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as logs from 'aws-cdk-lib/aws-logs';
 import * as events from 'aws-cdk-lib/aws-events';
 import * as targets from 'aws-cdk-lib/aws-events-targets';
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
@@ -38,12 +41,22 @@ export class ApigwAthenaSqsStack extends Stack {
       bucketName: `athena-${accountId}-${env}`
     });
 
+    const xrayLayer = new lambda.LayerVersion(this, 'xrayLayer', {
+      compatibleRuntimes: [
+        lambda.Runtime.PYTHON_3_9,
+      ],
+      code: lambda.Code.fromAsset('temp/lambda-layer-xray'),
+      description: 'Layer for X-Ray',
+    });
+
     const athenaQueryReceiverLambda = new lambda.Function(this, 'athenaQueryReceiverLambda', {
       functionName: `athena-query-receiver-${env}`,
       runtime: lambda.Runtime.PYTHON_3_9,
+      layers: [xrayLayer], 
       code: lambda.Code.fromAsset('lambda/query-receiver'),
       handler: 'query_receiver.handler',
       timeout: Duration.seconds(30),
+      logRetention: logs.RetentionDays.TWO_WEEKS,
       tracing: lambda.Tracing.ACTIVE,
       environment: {
         'SQS_URL': queryQueue.queueUrl
@@ -54,9 +67,11 @@ export class ApigwAthenaSqsStack extends Stack {
     const athenaQueryExecutorLambda = new lambda.Function(this, 'athenaQueryExecutorLambda', {
       functionName: `athena-query-executor-${env}`,
       runtime: lambda.Runtime.PYTHON_3_9,
+      layers: [xrayLayer],
       code: lambda.Code.fromAsset('lambda/query-executor', { exclude: ['venv'] }),
       handler: 'query_executor.handler',
       timeout: Duration.seconds(30),
+      logRetention: logs.RetentionDays.TWO_WEEKS,
       tracing: lambda.Tracing.ACTIVE,
       environment: {
         'SQS_URL': queryQueue.queueUrl,
@@ -74,9 +89,11 @@ export class ApigwAthenaSqsStack extends Stack {
     const athenaDeadletterQueryExecutorLambda = new lambda.Function(this, 'athenaDeadletterQueryExecutorLambda', {
       functionName: `athena-deadletter-query-executor-${env}`,
       runtime: lambda.Runtime.PYTHON_3_9,
+      layers: [xrayLayer],
       code: lambda.Code.fromAsset('lambda/query-executor', { exclude: ['venv'] }),
       handler: 'deadletter_batch.handler',
       timeout: Duration.minutes(15),
+      logRetention: logs.RetentionDays.TWO_WEEKS,
       tracing: lambda.Tracing.ACTIVE,
       environment: {
         'SQS_URL': queryQueue.queueUrl,

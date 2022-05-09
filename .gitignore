@@ -19,6 +19,10 @@
 # MAC
 **/.DS_Store
 
+# Lambda layer
+**/layers
+**/temp
+
 # CDK
 **/node_modules
 **/cdk.out

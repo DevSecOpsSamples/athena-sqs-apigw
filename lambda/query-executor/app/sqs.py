@@ -18,13 +18,13 @@ class Sqs(object):
 
     def delete_message(self, receipt_handle):
         """
-
+        :param string receipt_handle: 
         """
         return self.sqs_client.delete_message(QueueUrl=self.sqs_url, ReceiptHandle=receipt_handle)
 
     def send_message(self, json_query):
         """
-
+        :param string json_query: 
         """
         if type(json_query) is dict:
             json_query = json.dumps(json_query)
@@ -32,7 +32,7 @@ class Sqs(object):
 
     def send_deadletter_message(self, json_query):
         """
-
+        :param string json_query: 
         """
         if type(json_query) is dict:
             json_query = json.dumps(json_query)
@@ -48,7 +48,7 @@ class Sqs(object):
 
     def delete_deadletter_message(self, receipt_handle):
         """
-
+        :param string receipt_handle: 
         """
         deadletter_sqs_url = os.environ['DEADLETTER_SQS_URL']
         return self.sqs_client.delete_message(QueueUrl=deadletter_sqs_url, ReceiptHandle=receipt_handle)

@@ -38,7 +38,7 @@ class Athena(object):
         """
         Send the JSON string message to dead letter SQS when throttling error occurs
         
-        json_query: '{"userId": "e586fd16-61bc-4f21-b2b9-1b8b69066510", "queryId": "79a9aac3-e82b-4ed9-9fd5-eda242a4ad72", "query": "SELECT COUNT(request_verb) AS count, request_verb, client_ip FROM product_alb_logs GROUP BY request_verb, client_ip"}'}
+        :param json json_query: e.g., {"userId": "e586fd16-61bc-4f21-b2b9-1b8b69066510", "queryId": "79a9aac3-e82b-4ed9-9fd5-eda242a4ad72", "query": "SELECT COUNT(request_verb) AS count, request_verb, client_ip FROM product_alb_logs GROUP BY request_verb, client_ip"}
         """
         query = None
         assert 'query' in json_query
@@ -81,6 +81,9 @@ class Athena(object):
             return query_response
 
     def _put_success_metric(self, database):
+        """
+        :param string database: 
+        """
         self.cw_client.put_metric_data(
             Namespace='AthenaQuery',
             MetricData=[

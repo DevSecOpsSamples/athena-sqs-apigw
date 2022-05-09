@@ -29,7 +29,36 @@ Throttling error message:
 An error occurred (TooManyRequestsException) when calling the StartQueryExecution operation: You have exceeded the limit for the number of queries you can run concurrently. Please reduce the number of concurrent queries submitted by this account. Contact customer support to request a concurrent query limit increase.
 ```
 
+## Structure
+
+```
+├── athena-sqs-apigw-template.jmx
+├── bin
+│   └── index.ts
+├── cdk.json
+├── lambda
+│   ├── README.md
+│   ├── ping
+│   │   └── hello.js
+│   ├── query-executor
+│   │   ├── app
+│   │   │   ├── athena.py
+│   │   │   └── sqs.py
+│   │   ├── deadletter_batch.py
+│   │   ├── log_helper.py
+│   │   └── query_executor.py
+│   ├── query-receiver
+│   │   └── query_receiver.py
+│   └── requirements.txt
+├── lib
+│   └── athena-sqs-apigw.ts
+└── tsconfig.json
+```
+
 ## Prerequisites
+
+* Python 3.9
+* npm
 
 ```bash
 npm install -g aws-cdk@2.22.0
@@ -49,7 +78,13 @@ Use the `cdk` command-line toolkit to interact with your project:
 ### CDK deploy
 
 ```bash
+# Lambda Layer
+mkdir -p ./temp/lambda-layer-xray
+pip install -r ./lambda/requirements.txt -t ./temp/lambda-layer-xray/
+
 # git repository root
+
+/python
 cdk deploy
 ```
 
