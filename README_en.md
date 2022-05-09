@@ -1,14 +1,11 @@
 
 # Retry Athena query with SQS and API Gateway
 
-This solution was made to retry Athena query without requested data loss when Throttling error occurred.
+This solution was made to retry Athena query with SQS, dead letter SQS, and API Gateway without requested data loss when Throttling error occurred.
 
 ![cloudwatch-metric](./screenshots/cloudwatch-metric.png?raw=true)
 
-
-## Background
-
-There is a limitation of concurrent query according to the Quota:
+## Quota
 
 | Region    | Quota name         | AWS default quota value | Adjustable |
 |-----------|--------------------|--------------|--------------|

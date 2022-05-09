@@ -3,10 +3,14 @@
 
 Athena 쿼리 동시 실행 Quota에 의해 쓰로틀링 에러가 발생할 수 있으며 SQS, dead letter SQS를 사용해 쓰틀링 에러 발생시 재실행 합니다.
 
-![cloudwatch-metric](./screenshots/cloudwatch-metric.png?raw=true)
-## Background
+Service Quotas https://docs.aws.amazon.com/ko_kr/athena/latest/ug/service-limits.html:
 
-There is a limitation of concurrent query according to the Quota:
+```
+DML 또는 DDL 쿼리 할당량은 실행 중인 쿼리와 대기 중인 쿼리를 모두 포함합니다. 예를 들어 DML 쿼리 할당량이 25이고 실행 중인 쿼리와 대기 중인 쿼리의 합계가 26인 경우 쿼리 26은 TooManyRequestsException 오류를 발생시킵니다.
+```
+
+![cloudwatch-metric](./screenshots/cloudwatch-metric.png?raw=true)
+## Quota
 
 | Region    | Quota name         | AWS default quota value | Adjustable |
 |-----------|--------------------|--------------|--------------|
