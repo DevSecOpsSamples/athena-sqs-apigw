@@ -98,7 +98,7 @@ https://docs.aws.amazon.com/ko_kr/athena/latest/ug/query-metrics-viewing.html
 | Metric               | Description        |
 |----------------------|--------------------|
 | StartQueryCount      | `athena-query-executor` Lambda에서 start_query_execution 함수가 호출된 횟수입니다. |
-| ThrottlingErrorCount | `athena-query-executor` Lambda에서 조절 오류(TooManyRequestsException)가 발생한 횟수입니다.   |
+| ThrottlingErrorCount | `athena-query-executor` Lambda에서 쓰로틀링 에러(TooManyRequestsException)가 발생한 횟수입니다.   |
 | RestartQueryCount    | `athena-query` SQS에서 `athena-query-deadletter` SQS로 대기열에 추가된 쿼리를 다시 시작한 횟수입니다.   |
 
 # Creating the table for ALB logs
