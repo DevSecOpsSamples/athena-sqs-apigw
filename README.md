@@ -3,6 +3,8 @@
 
 Athena 쿼리 동시 실행 Quota에 의해 쓰로틀링 에러가 발생할 수 있습니다. API Gateway를 통해 쿼리 실행을 SQS에 저장, Lambda로 실행하고 쓰로틀링 에러 발생시 dead letter SQS에 저장 후 EventBridge를 통해 1분 단위로 재실행 합니다.
 
+![architecture](./screenshots/architecture.png?raw=true)
+
 ![cloudwatch-metric](./screenshots/cloudwatch-metric.png?raw=true)
 ## Quota
 
