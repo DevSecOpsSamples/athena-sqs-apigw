@@ -78,13 +78,9 @@ Use the `cdk` command-line toolkit to interact with your project:
 ### CDK deploy
 
 ```bash
-# Lambda Layer
-mkdir -p ./temp/lambda-layer-xray
-pip install -r ./lambda/requirements.txt -t ./temp/lambda-layer-xray/
+mkdir -p ./temp/lambda-layer-xray/python
+pip install -r ./lambda/requirements.txt -t ./temp/lambda-layer-xray/python
 
-# git repository root
-
-/python
 cdk deploy
 ```
 
@@ -96,14 +92,14 @@ cdk deploy
 
 | Service       | Name                        | Description  |
 |---------------|-----------------------------|--------------|
-| API Gateway   | /athena/query POST API           | Athena 쿼리를 queue에 추가하는 RESTFul API. API endpoint: `https://<random-id>.execute-api.<region>.amazonaws.com/dev//athena/query`        |
-| SQS           | athena-query            | Athena 쿼리 실행 queue 입니다.            |
-| SQS           | athena-query-deadletter | Athena query SQS의 처리하지 못한 queue입니다. athena-query-executor Lambda에서 조절 오류가 발생하면 Athena 쿼리를 대기열에 넣습니다.     |
+| API Gateway   | /athena/query POST API      | Athena 쿼리를 queue에 추가하는 RESTFul API. API endpoint: `https://<random-id>.execute-api.<region>.amazonaws.com/dev//athena/query`        |
+| SQS           | athena-query                | Athena 쿼리 실행 queue 입니다.            |
+| SQS           | athena-query-deadletter     | Athena query SQS의 처리하지 못한 queue입니다. athena-query-executor Lambda에서 조절 오류가 발생하면 Athena 쿼리를 대기열에 넣습니다.     |
 | Lambda        | [athena-query-receiver](./lambda/query-receiver/query_receiver.py)   | API Gateway에서 Athena 쿼리를 수신하고 'athena-query' SQS에 메시지를 대기열에 넣습니다.     |
 | Lambda        | [athena-query-executor](./lambda/query-executor/query_executor.py)   | 이벤트 소스(athena-query Lambda)에서 수신한 Athena 쿼리를 실행합니다.     |
 | Lambda        | [athena-deadletter-query-executor](./lambda/query-executor/deadletter_batch.py) | athena-query-deadletter 메시지를 처리하는 배치 Lambda 입니다.        |
-| EventBridge Rule | athena-deadletter-query-executor     | 매분마다 athena-dead letter-query-execute Lambda를 실행합니다. [EventBus Rule menu](https://ap-northeast-2.console.aws.amazon.com/events/home?region=ap-northeast-2#/eventbus/default/rules/)     |
-| S3 Bucket     | athena-{account-id}     | Athena query output bucket      |
+| EventBridge Rule | athena-deadletter-query-executor | 매분마다 athena-dead letter-query-execute Lambda를 실행합니다. [EventBus Rule menu](https://ap-northeast-2.console.aws.amazon.com/events/home?region=ap-northeast-2#/eventbus/default/rules/)     |
+| S3 Bucket     | athena-{account-id}         | Athena query output bucket      |
 
 * [lambda/query-executor/app/athena.py](./lambda/query-executor/app/athena.py)
 * [lambda/query-executor/app/sqs.py](./lambda/query-executor/app/sqs.py)

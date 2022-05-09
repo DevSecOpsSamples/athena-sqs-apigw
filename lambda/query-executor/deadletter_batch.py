@@ -9,6 +9,10 @@ from botocore.exceptions import ClientError
 from app.athena import Athena
 from app.sqs import Sqs
 
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.core import patch_all
+patch_all()
+
 log_helper.init_log_config()
 
 
