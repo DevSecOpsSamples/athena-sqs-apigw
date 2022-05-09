@@ -1,16 +1,14 @@
 
 # Retry Athena query with SQS and API Gateway
 
-Athena 쿼리 동시 실행 Quota에 의해 쓰로틀링 에러가 발생할 수 있습니다. API Gateway를 통해 쿼리 실행을 SQS에 저장해서 Lambda로 실행하고 쓰로틀링 에러 발생시 dead letter SQS에 저장하고 EventBridge를 통해 1분 단위로 재실행 합니다.
-
-Service Quotas https://docs.aws.amazon.com/ko_kr/athena/latest/ug/service-limits.html:
-
-```
-DML 또는 DDL 쿼리 할당량은 실행 중인 쿼리와 대기 중인 쿼리를 모두 포함합니다. 예를 들어 DML 쿼리 할당량이 25이고 실행 중인 쿼리와 대기 중인 쿼리의 합계가 26인 경우 쿼리 26은 TooManyRequestsException 오류를 발생시킵니다.
-```
+Athena 쿼리 동시 실행 Quota에 의해 쓰로틀링 에러가 발생할 수 있습니다. API Gateway를 통해 쿼리 실행을 SQS에 저장, Lambda로 실행하고 쓰로틀링 에러 발생시 dead letter SQS에 저장 후 EventBridge를 통해 1분 단위로 재실행 합니다.
 
 ![cloudwatch-metric](./screenshots/cloudwatch-metric.png?raw=true)
 ## Quota
+
+Service Quotas https://docs.aws.amazon.com/ko_kr/athena/latest/ug/service-limits.html:
+
+DML 또는 DDL 쿼리 할당량은 실행 중인 쿼리와 대기 중인 쿼리를 모두 포함합니다. 예를 들어 DML 쿼리 할당량이 25이고 실행 중인 쿼리와 대기 중인 쿼리의 합계가 26인 경우 쿼리 26은 TooManyRequestsException 오류를 발생시킵니다.
 
 | Region    | Quota name         | AWS default quota value | Adjustable |
 |-----------|--------------------|--------------|--------------|
@@ -61,7 +59,7 @@ An error occurred (TooManyRequestsException) when calling the StartQueryExecutio
 * npm
 
 ```bash
-npm install -g aws-cdk@2.22.0
+npm install -g aws-cdk@2.23.0
 npm install
 
 export CDK_DEFAULT_ACCOUNT=123456789012
@@ -135,7 +133,7 @@ https://docs.aws.amazon.com/ko_kr/athena/latest/ug/query-metrics-viewing.html
 
 ## Custom Metric
 
-AWS에서 제공하는 Athena metric은 쿼리 실행 횟수와 에러 횟수에 대한 metric을 제공하지 않으며 SQS에서 athena query를 시작 또는 재시작시 custom metric을 저장합니다.
+AWS에서 제공하는 Athena metric은 쿼리 실행 횟수와 에러 횟수에 대한 metric을 제공하지 않으므로 SQS 메시지 대기열의 Athena query를 시작 또는 재시작시 custom metric을 저장합니다.
 
 `athena-query` > `athena-query-deadletter` 또는 `athena-query-deadletter` > `athena-query` 로 message 이동시 Custom Metric을 생성하기 위해 SQS의 dead letter 대기열 기능이 아닌 code로 처리합니다.
 
