@@ -118,7 +118,7 @@ All resources use the {stage} suffix such as athena-query-local, athena-query-de
 
 4. To re-execute the failed queries, send messages from the dead letter queue to the athena-query queue.
 
-   Lambda(athena-deadletter-query-executor) is invoked every 1-minute by EventBridge Rule.
+   athena-deadletter-query-executor Lambda is invoked every 1-minute by EventBridge Rule.
 
    SQS(athena-query-deadletter) → Lambda(athena-deadletter-query-executor) → enqueue SQS(athena-query)
 
