@@ -108,7 +108,7 @@ All resources use the {stage} suffix such as athena-query-local, athena-query-de
 
 1. A user sends an Athena query in JSON format to API Gateway (/athena/query POST API), which sends a message to the athena-query queue via Lambda (athena-query-receiver).
 
-2. athena-query-executor Lambda that Event Source is SQS(athena-query) receives messages from the queue and executes the Athena query.
+2. The athena-query-executor Lambda that Event Source is SQS(athena-query) receives messages from the queue and executes the Athena queries.
 
    athena-query-executor Lambda receives up to 10 messages from the queue.
 
