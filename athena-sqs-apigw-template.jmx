@@ -35,13 +35,13 @@
                 <stringProp name="Argument.value">{&#xd;
   &quot;userId&quot;: &quot;e586fd16-61bc-4f21-b2b9-1b8b69066510&quot;,&#xd;
   &quot;queryId&quot;: &quot;79a9aac3-e82b-4ed9-9fd5-eda242a4ad72&quot;,&#xd;
-  &quot;query&quot;: &quot;SELECT COUNT(request_verb) AS count, request_verb, client_ip FROM product_alb_logs GROUP BY request_verb, client_ip;&quot;&#xd;
+  &quot;query&quot;: &quot;SELECT COUNT(request_verb) AS count, request_verb, client_ip FROM alb_logs GROUP BY request_verb, client_ip;&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="HTTPSampler.domain"><random-id>.execute-api.ap-northeast-2.amazonaws.com</stringProp>
+          <stringProp name="HTTPSampler.domain"><random-id>.execute-api.<region>.amazonaws.com</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>

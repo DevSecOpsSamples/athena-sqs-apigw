@@ -3,7 +3,6 @@ import { Construct } from 'constructs';
 
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-// import { PythonFunction } from 'aws-cdk-lib/aws-lambda';
 
 import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as iam from 'aws-cdk-lib/aws-iam';
@@ -84,7 +83,7 @@ export class ApigwAthenaSqsStack extends Stack {
         batchSize: 10,
       })
     );
-    const executorUrl = athenaQueryExecutorLambda.addFunctionUrl();
+    const executorLambdaUrl = athenaQueryExecutorLambda.addFunctionUrl();
 
     const athenaDeadletterQueryExecutorLambda = new lambda.Function(this, 'athenaDeadletterQueryExecutorLambda', {
       functionName: `athena-deadletter-query-executor-${env}`,
@@ -100,7 +99,7 @@ export class ApigwAthenaSqsStack extends Stack {
         'DEADLETTER_SQS_URL': deadLetterQueue.queueUrl,
       }
     });
-    const deadletterQueryExecutorUrl = athenaDeadletterQueryExecutorLambda.addFunctionUrl();
+    const deadletterLambdaUrl = athenaDeadletterQueryExecutorLambda.addFunctionUrl();
     const rule = new events.Rule(this, 'Rule', {
       ruleName: `athena-deadletter-query-executor-${env}`,
       schedule: events.Schedule.expression('rate(1 minute)')
@@ -125,10 +124,10 @@ export class ApigwAthenaSqsStack extends Stack {
     groupa.addResource('query').addMethod('POST', new apigateway.LambdaIntegration(athenaQueryReceiverLambda, { proxy: true }));
 
     new CfnOutput(this, 'apiGatewayUrl', { value: api.url });
-    new CfnOutput(this, 'receiverUrl', { value: receiverUrl.url });
-    new CfnOutput(this, 'executorUrl', { value: executorUrl.url });
-    new CfnOutput(this, 'deadletterQueryExecutorUrl', { value: deadletterQueryExecutorUrl.url });
-    new CfnOutput(this, 'sqsUrl', { value: queryQueue.queueUrl });
+    new CfnOutput(this, 'receiverLambdaFunctionUrl', { value: receiverUrl.url });
+    new CfnOutput(this, 'executorLambdaFunctionUrl', { value: executorLambdaUrl.url });
+    new CfnOutput(this, 'deadletterLambdaUrl', { value: deadletterLambdaUrl.url });
+    new CfnOutput(this, 'querySqsUrl', { value: queryQueue.queueUrl });
     new CfnOutput(this, 'deadletterQuerySqsUrl', { value: deadLetterQueue.queueUrl });
     new CfnOutput(this, 'bucketName', { value: bucket.bucketName });
   }
