@@ -1,0 +1,2 @@
+athena-cli==0.1.11
+aws_xray_sdk

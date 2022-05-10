@@ -1,0 +1,4 @@
+boto3~=1.22.8
+botocore~=1.25.8
+athena-cli==0.1.11
+aws_xray_sdk

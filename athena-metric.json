@@ -1,0 +1,206 @@
+{
+    "Metrics": [
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "ProcessedBytes",
+            "Dimensions": [
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "QueryPlanningTime",
+            "Dimensions": [
+                {
+                    "Name": "WorkGroup",
+                    "Value": "primary"
+                },
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "EngineExecutionTime",
+            "Dimensions": [
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "QueryPlanningTime",
+            "Dimensions": [
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "EngineExecutionTime",
+            "Dimensions": [
+                {
+                    "Name": "WorkGroup",
+                    "Value": "primary"
+                },
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "TotalExecutionTime",
+            "Dimensions": [
+                {
+                    "Name": "WorkGroup",
+                    "Value": "primary"
+                },
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "ProcessedBytes",
+            "Dimensions": [
+                {
+                    "Name": "WorkGroup",
+                    "Value": "primary"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "TotalExecutionTime",
+            "Dimensions": [
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "QueryQueueTime",
+            "Dimensions": [
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "ProcessedBytes",
+            "Dimensions": [
+                {
+                    "Name": "WorkGroup",
+                    "Value": "primary"
+                },
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "ServiceProcessingTime",
+            "Dimensions": [
+                {
+                    "Name": "WorkGroup",
+                    "Value": "primary"
+                },
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "QueryQueueTime",
+            "Dimensions": [
+                {
+                    "Name": "WorkGroup",
+                    "Value": "primary"
+                },
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        },
+        {
+            "Namespace": "AWS/Athena",
+            "MetricName": "ServiceProcessingTime",
+            "Dimensions": [
+                {
+                    "Name": "QueryState",
+                    "Value": "SUCCEEDED"
+                },
+                {
+                    "Name": "QueryType",
+                    "Value": "DML"
+                }
+            ]
+        }
+    ]
+}

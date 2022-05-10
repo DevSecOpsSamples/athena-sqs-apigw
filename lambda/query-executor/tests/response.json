@@ -1,0 +1,15 @@
+{
+  "QueryExecutionId":"e6443a27-8c9d-4f92-8fcb-62c40fcba721",
+  "ResponseMetadata":{
+    "RequestId":"6db4ea9b-ff2c-4594-8ff6-cedd3a604095",
+    "HTTPStatusCode":200,
+    "HTTPHeaders":{
+      "content-type":"application/x-amz-json-1.1",
+      "date":"Tue, 03 May 2022 14:40:49 GMT",
+      "x-amzn-requestid":"6db4ea9b-ff2c-4594-8ff6-cedd3a604095",
+      "content-length":"59",
+      "connection":"keep-alive"
+    },
+    "RetryAttempts":0
+  }
+}
