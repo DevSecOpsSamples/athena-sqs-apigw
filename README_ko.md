@@ -108,7 +108,7 @@ cdk deploy
 
 ### Flow
 
-1. 사용자가 JSON 포맷의 Athena 쿼리를 API Gateway(/athena/query POST API)로 전송하면 Lambda(athena-query-receiver)를 통해 athena-query 대기열에 메시자를 전송합니다.
+1. 사용자가 JSON 포맷의 Athena 쿼리를 API Gateway(/athena/query POST API)로 전송하면 Lambda(athena-query-receiver)를 통해 athena-query 대기열에 메시지를 전송합니다.
 
 2. SQS(athena-query)가 이벤트 소스로 설정된 athena-query-executor Lambda는 대기열에서 메시지를 수신하고 Athena 쿼리를 실행합니다.
 
