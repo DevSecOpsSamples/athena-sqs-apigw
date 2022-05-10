@@ -64,6 +64,8 @@ npm install
 
 export CDK_DEFAULT_ACCOUNT=123456789012
 export CDK_DEFAULT_REGION=us-east-1
+
+cdk bootstrap
 ```
 
 Use the `cdk` command-line toolkit to interact with your project:

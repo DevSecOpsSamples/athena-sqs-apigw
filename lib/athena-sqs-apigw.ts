@@ -36,7 +36,7 @@ export class ApigwAthenaSqsStack extends Stack {
     });
 
     // change with your account id
-    const accountId = props?.env?.account || '681747700094'
+    const accountId = props?.env?.account || '681747700094-vg'
     const bucket = new s3.Bucket(this, 's3', {
       bucketName: `athena-${accountId}-${env}`
     });
