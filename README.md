@@ -112,7 +112,7 @@ All resources use the {stage} suffix such as athena-query-local, athena-query-de
 
    athena-query-executor Lambda receives up to 10 messages from the queue.
 
-3. If the Athena query execution fails due to a throttling error, it enqueue a message to the deadletter queue.
+3. If the Athena query execution fails due to a throttling error, it enqueue messages to the deadletter queue.
 
    SQS(athena-query) → Lambda(athena-query-executor) → SQS(athena-query-deadletter)
 
