@@ -118,7 +118,9 @@ cdk deploy
 
    SQS(athena-query) → Lambda(athena-query-executor) → SQS(athena-query-deadletter)
 
-4. dead leatter 대기열에서 athena-query 대기열로 메시지를 전송합니다. Lambda(athena-deadletter-query-executor)는 EventBridge Rule을 통해 1분 간격으로 실행됩니다.
+4. 실패한 쿼리를 재실해하기 위해 dead leatter 대기열에서 athena-query 대기열로 메시지를 전송합니다. 
+
+   Lambda(athena-deadletter-query-executor)는 EventBridge Rule을 통해 1분 간격으로 실행됩니다.
 
    SQS(athena-query-deadletter) → Lambda(athena-deadletter-query-executor) → SQS(athena-query)
 
