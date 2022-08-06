@@ -19,6 +19,7 @@ sonarqube {
         property "sonar.sources", "."
         property "sonar.exclusions", "**/node_modules/**, **/sample/**"
         property "sonar.cpd.exclusions", "**/*index.ts"
+        property "sonar.host.url", "http://127.0.0.1:9000"
         property "sonar.links.ci", "https://example.com"
         property "sonar.log.level", "DEBUG"
     }
