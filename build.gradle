@@ -10,8 +10,8 @@ repositories {
 sonarqube {
     properties {
         property "sonar.projectName", "athena-sqs-apigw"
-        property "sonar.projectKey", "athena-sqs-apigw"
-        property "sonar.organization", "containeronaws"
+        property "sonar.projectKey", "engel80_athena-sqs-apigw"
+        property "sonar.organization", "engel80"
         // property "sonar.host.url", "http://127.0.0.1:9000"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.sourceEncoding", "UTF-8"
