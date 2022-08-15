@@ -1,7 +1,7 @@
 
 ### [English](./README.md) | [한국어](./README_ko.md)
 
-# Workacound solution for Athena concurrent query limit with SQS and API Gateway
+# SQS 및 API Gateway를 사용한 Athena 동시 쿼리 제한 해결 방법
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=engel80_athena-sqs-apigw&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=engel80_athena-sqs-apigw)  [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=engel80_athena-sqs-apigw&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=engel80_athena-sqs-apigw)
 
