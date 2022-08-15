@@ -24,14 +24,14 @@ def handler(event, context):
 
     for record in event['Records']:
         print('body: ' + str(record))
-        jsonQuery = json.loads(record['body'])
-        print('postApiBody: ' + str(jsonQuery))
+        json_query = json.loads(record['body'])
+        print('postApiBody: ' + str(json_query))
 
         # query = postApiBody['query']
         receiptHandle = record['receiptHandle']
 
         try:
-            athena.start_query(jsonQuery)
+            athena.start_query(json_query)
             sqs.delete_message(receiptHandle)
             return {
                     "statusCode": 200,
