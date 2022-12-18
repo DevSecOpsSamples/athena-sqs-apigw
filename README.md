@@ -2,6 +2,7 @@
 
 # Workaround solution for Athena concurrent query limit with SQS and API Gateway
 
+[![Build](https://github.com/DevSecOpsSamples/athena-sqs-apigw/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/DevSecOpsSamples/athena-sqs-apigw/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_athena-sqs-apigw&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_athena-sqs-apigw)  [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_athena-sqs-apigw&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_athena-sqs-apigw)
 
 Athena query concurrent execution quota can cause throttling errors. An Athena query is stored in SQS through API Gateway and executed by Lambda, and when a throttling error occurs, it is stored in dead letter SQS and re-executed every 1 minute through EventBridge. Use SQS and dead letter SQS to ensure that all queries requested by users work in sequence without loss.
