@@ -10,8 +10,8 @@ repositories {
 sonarqube {
     properties {
         property "sonar.projectName", "athena-sqs-apigw"
-        property "sonar.projectKey", "engel80_athena-sqs-apigw"
-        property "sonar.organization", "engel80"
+        property "sonar.projectKey", "DevSecOpsSamples_athena-sqs-apigw"
+        property "sonar.organization", "devsecopssamples"
         // property "sonar.host.url", "http://127.0.0.1:9000"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.sourceEncoding", "UTF-8"
@@ -20,6 +20,6 @@ sonarqube {
         property "sonar.issue.ignore.multicriteria", "e1"
         property "sonar.issue.ignore.multicriteria.e1.ruleKey", "typescript:S1848"
         property "sonar.issue.ignore.multicriteria.e1.resourceKey", "**/*.ts"
-        property "sonar.links.ci", "https://github.com/engel80/athena-sqs-apigw"
+        property "sonar.links.ci", "https://github.com/DevSecOpsSamples/athena-sqs-apigw/actions"
     }
 }

@@ -3,6 +3,7 @@
 
 # SQS 및 API Gateway를 사용한 Athena 동시 쿼리 제한 해결 방법
 
+[![Build](https://github.com/DevSecOpsSamples/athena-sqs-apigw/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/DevSecOpsSamples/athena-sqs-apigw/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_athena-sqs-apigw&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_athena-sqs-apigw)  [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_athena-sqs-apigw&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_athena-sqs-apigw)
 
 Athena 쿼리 동시 실행 quota에 의해 쓰로틀링 에러가 발생할 수 있습니다. API Gateway를 통해 쿼리를 SQS에 저장, Lambda로 실행하고 쓰로틀링 에러 발생시 dead letter SQS에 저장 후 EventBridge를 통해 1분 단위로 재실행 합니다.
