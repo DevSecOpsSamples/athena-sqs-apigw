@@ -1,9 +1,11 @@
 
 ### [English](./README.md) | [한국어](./README_ko.md)
 
-# Retry Athena query with SQS and API Gateway
+# SQS 및 API Gateway를 사용한 Athena 동시 쿼리 제한 해결 방법
 
-Athena 쿼리 동시 실행 quota에 의해 쓰로틀링 에러가 발생할 수 있습니다. API Gateway를 통해 쿼리를 SQS에 저장, Lambda로 실행하고 쓰로틀링 에러 발생시 dead letter SQS에 저장 후 EventBridge를 통해 1분 단위로 재실행 합니다. 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_athena-sqs-apigw&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_athena-sqs-apigw)  [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DevSecOpsSamples_athena-sqs-apigw&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DevSecOpsSamples_athena-sqs-apigw)
+
+Athena 쿼리 동시 실행 quota에 의해 쓰로틀링 에러가 발생할 수 있습니다. API Gateway를 통해 쿼리를 SQS에 저장, Lambda로 실행하고 쓰로틀링 에러 발생시 dead letter SQS에 저장 후 EventBridge를 통해 1분 단위로 재실행 합니다.
 SQS와 dead letter SQS를 이용해 사용자에 의해 요청된 모든 쿼리가 손실 없이 순자적으로 작동되도록 합니다.
 
 ![architecture](./screenshots/architecture.png?raw=true)
@@ -63,9 +65,6 @@ An error occurred (TooManyRequestsException) when calling the StartQueryExecutio
 ```bash
 npm install -g aws-cdk@2.23.0
 npm install
-
-export CDK_DEFAULT_ACCOUNT=123456789012
-export CDK_DEFAULT_REGION=us-east-1
 
 cdk bootstrap
 ```
