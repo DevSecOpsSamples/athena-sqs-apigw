@@ -66,9 +66,6 @@ An error occurred (TooManyRequestsException) when calling the StartQueryExecutio
 npm install -g aws-cdk@2.23.0
 npm install
 
-export CDK_DEFAULT_ACCOUNT=123456789012
-export CDK_DEFAULT_REGION=us-east-1
-
 cdk bootstrap
 ```
 
