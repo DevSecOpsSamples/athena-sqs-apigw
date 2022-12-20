@@ -24,6 +24,8 @@
 **/temp
 
 # CDK
+bint
+lib
 **/node_modules
 **/cdk.out
 **/cdk.context.json
