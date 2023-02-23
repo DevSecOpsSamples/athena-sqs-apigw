@@ -112,11 +112,11 @@ All resources use the {stage} suffix such as athena-query-local, athena-query-de
 
    athena-query-executor Lambda receives up to 10 messages from the queue.
 
-3. If the Athena query execution fails due to a throttling error, it enqueue messages to the deadletter queue.
+3. If Athena query execution fails due to a throttling error, messages will be enqueued to the deadletter queue.
 
    SQS(athena-query) → Lambda(athena-query-executor) → SQS(athena-query-deadletter)
 
-4. To re-execute the failed queries, send messages from the dead letter queue to the athena-query queue.
+4. To re-execute failed queries, messages from the deadletter queue are sent to the athena-query queue and enqueued.
 
    athena-deadletter-query-executor Lambda is invoked every 1-minute by EventBridge Rule.
 
